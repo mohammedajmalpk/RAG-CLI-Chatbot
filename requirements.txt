@@ -5,3 +5,7 @@ pypdf2
 dotenv
 torch
 sentence-transformers
+transformers
+langchain
+langchain-huggingface
+ollama

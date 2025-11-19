@@ -1,11 +1,12 @@
 import os
 import pickle
 import numpy as np
+import ollama
 from sentence_transformers import SentenceTransformer
 import faiss
 
 
-FAISS_INDEX = "vectors.index"
+FAISS_INDEX = "vector_store/vectors.index"
 CHUNK_FILE = "vector_store/chunks.pkl"
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
@@ -62,10 +63,18 @@ def vector_search(user_query, index, chunks, chunk_metadata, top_k=3):
 def generate_answer(user_query, matched_chunks):
     """
         Generate a final answer combining user query and retrieved chunks.
+        use ollama model as transformer LLM
     """
     context = "\n\n".join([f"Page: {c['page']}\n{c['chunk']}\n" for c in matched_chunks])
-    response = f"Your question: {user_query}\n\nAnswer:\n{context}"
-    return response
+    prompt = (
+        f"You are a helpful assistant. Use the context below to answer the question.\n\n"
+        f"Context:\n{context}\n\n"
+        f"Question: {user_query}\n"
+        f"Answer:"
+    )
+    response = ollama.generate(model='llama3.2', prompt=prompt)
+    # response = f"Your question: {user_query}\n\nAnswer:\n{context}"
+    return response['response']
 
 
 def main():
