@@ -8,8 +8,8 @@ from sentence_transformers import SentenceTransformer
 load_dotenv()
 
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-VECTOR_INDEX_FILE = "vectors.index"
-CHUNK_FILE = "chunks.pkl"
+VECTOR_INDEX_FILE = "vector_store/vectors.index"
+CHUNK_FILE = "vector_store/chunks.pkl"
 CHUNK_SIZE = 500  # goldilocks principle, proven by many RAG models, as per their white paper docs
 OVERLAP_SIZE = 100  # 20% of chunk size
 
@@ -129,6 +129,6 @@ def run_pdf_reader(user_pdf_file):
 
 
 if __name__ == "__main__":
-    pdf_file = "Introduction-To-Python.pdf"
+    pdf_file = "pdf-folder/Introduction-To-Python.pdf"
     embeddings, chunks = run_pdf_reader(pdf_file)
     print("\nSetup complete! You may start to chat...\n")

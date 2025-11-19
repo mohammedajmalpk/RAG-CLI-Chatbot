@@ -6,7 +6,7 @@ import faiss
 
 
 FAISS_INDEX = "vectors.index"
-CHUNK_FILE = "chunks.pkl"
+CHUNK_FILE = "vector_store/chunks.pkl"
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 # Load embedding model
