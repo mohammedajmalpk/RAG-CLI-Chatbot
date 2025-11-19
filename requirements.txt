@@ -1,0 +1,5 @@
+faiss-cpu
+openai
+pypdf2
+dotenv
+sentence-transformers
