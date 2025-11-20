@@ -19,6 +19,7 @@ model = SentenceTransformer(EMBEDDING_MODEL_NAME)
 def read_pdf(file_path):
     """
         read a introduction to python pdf file and return concatenated text and page-wise info.
+        2-data ingestion
     """
     print("\nReading PDF...\n")
     with open(file_path, "rb") as f:
@@ -45,6 +46,7 @@ def read_pdf(file_path):
 def create_chunks(text, total_pages, chunk_size=CHUNK_SIZE, overlap_size=OVERLAP_SIZE):
     """
         split the text into overlapping chunks and create chunk metadata.
+        3- data parsing
     """
     chunks = []
     chunk_metadata = []
@@ -67,7 +69,8 @@ def create_chunks(text, total_pages, chunk_size=CHUNK_SIZE, overlap_size=OVERLAP
 
 def embed_chunks(chunks):
     """
-    Convert each chunk into a vector using the SentenceTransformer model.
+        convert each chunk into a vector using the SentenceTransformer model.
+        4-embedding
     """
     embeddings = []
     for i, chunk in enumerate(chunks):
@@ -82,6 +85,7 @@ def embed_chunks(chunks):
 def build_faiss_index(embeddings):
     """
         Build a FAISS index from embeddings. here we are using hugging face
+        5 - create vector database
     """
     dim = embeddings.shape[1] # so the vector dimension is 384
     index = faiss.IndexFlatIP(dim)
@@ -91,7 +95,8 @@ def build_faiss_index(embeddings):
 
 def save_data(index, chunks, chunk_metadata, total_pages):
     """
-    Save FAISS index and chunk data to files.
+        save FAISS index and chunk data to files.
+        6 - store embeddings to vector db
     """
     faiss.write_index(index, VECTOR_INDEX_FILE)
     with open(CHUNK_FILE, "wb") as f:
@@ -115,12 +120,14 @@ def run_pdf_reader(user_pdf_file):
         embed each chunk for convert to vector
         create a vector db and all embeddings added to vector db
         save the vector db and chunks pickle file
+
+        1- main function
     """
     text, total_pages = read_pdf(user_pdf_file)
-    chunks, chunk_metadata = create_chunks(text, total_pages)
-    embeddings = embed_chunks(chunks)
-    index = build_faiss_index(embeddings)
-    save_data(index, chunks, chunk_metadata, total_pages)
+    chunks, chunk_metadata = create_chunks(text, total_pages) # this is data parsing
+    embeddings = embed_chunks(chunks) # this is embedding
+    index = build_faiss_index(embeddings) # this is storing vectors
+    save_data(index, chunks, chunk_metadata, total_pages) # this is save
 
     print(f"Embeddings shape: {embeddings.shape}")
     print(f"First vector 5 dimensions: {embeddings[0][:5]}")
