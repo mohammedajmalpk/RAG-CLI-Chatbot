@@ -18,10 +18,10 @@ model = SentenceTransformer(EMBEDDING_MODEL_NAME)
 
 def read_pdf(file_path):
     """
-        read a introduction to python pdf file and return concatenated text and page-wise info.
+        read a introduction to python pdf file and return concatenated text and page wise info.
         2-data ingestion
     """
-    print("\nReading PDF...\n")
+    print("\nReading pdf...\n")
     with open(file_path, "rb") as f:
         pdf_reader = PdfReader(f)
         total_pages = len(pdf_reader.pages)
@@ -84,7 +84,7 @@ def embed_chunks(chunks):
 
 def build_faiss_index(embeddings):
     """
-        Build a FAISS index from embeddings. here we are using hugging face
+        Build a faiss index from embeddings. here we are using hugging face
         5 - create vector database
     """
     dim = embeddings.shape[1] # so the vector dimension is 384
@@ -110,9 +110,6 @@ def save_data(index, chunks, chunk_metadata, total_pages):
     print(f"Files saved: {VECTOR_INDEX_FILE}, {CHUNK_FILE}")
 
 
-# -----------------------------
-# Main Function
-# -----------------------------
 def run_pdf_reader(user_pdf_file):
     """
         read pdf
@@ -129,8 +126,8 @@ def run_pdf_reader(user_pdf_file):
     index = build_faiss_index(embeddings) # this is storing vectors
     save_data(index, chunks, chunk_metadata, total_pages) # this is save
 
-    print(f"Embeddings shape: {embeddings.shape}")
-    print(f"First vector 5 dimensions: {embeddings[0][:5]}")
+    print(f"embeddings shape: {embeddings.shape}")
+    print(f"first 5 vector dimensions: {embeddings[0][:5]}")
 
     return embeddings, chunks
 
@@ -138,4 +135,4 @@ def run_pdf_reader(user_pdf_file):
 if __name__ == "__main__":
     pdf_file = "pdf-folder/Introduction-To-Python.pdf"
     embeddings, chunks = run_pdf_reader(pdf_file)
-    print("\nSetup complete! You may start to chat...\n")
+    print("\nsetup complete! You may start to chat...\n")
